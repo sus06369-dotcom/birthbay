@@ -280,12 +280,34 @@ likeBtn.onclick = () => {
 
   // 2️⃣ 啟動新的 overlay 動畫
   startOverlaySequence();
+  // 文字逐行顯示後加入 GIF
+setTimeout(() => {
+  const overlay = document.getElementById('overlay');
+
+  const gif = document.createElement('img');
+  gif.src = '線條小狗奔跑.gif'; // 改成你提供的 GIF 名稱
+  gif.style.width = '320px';
+  gif.style.borderRadius = '12px';
+  gif.style.position = 'absolute';
+  gif.style.top = 'calc(50% + 50%)'; // 長方形下方
+  gif.style.left = '100%';           // 初始在右邊畫面外
+  gif.style.opacity = 0;
+  gif.style.transform = 'translateX(0)';
+  gif.style.transition = 'all 1s ease';
+  overlay.appendChild(gif);
+
+  // 觸發動畫：淡入 + 移動到置中
+  requestAnimationFrame(() => {
+    gif.style.opacity = 1;
+    gif.style.left = '50%';
+    gif.style.transform = 'translateX(-50%)';
+  });
+}, 1800 + (texts.length * 500)); // 在文字動畫結束後觸發
 };
 
 function startOverlaySequence() {
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
-  overlay.style.alignItems = 'flex-start';
 
   // 1️⃣ 圓形置中淡入
   const shape = document.createElement('div');
