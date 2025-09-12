@@ -108,6 +108,12 @@ body {
 }
 @keyframes fadeSlideIn { to { opacity: 1; transform: translateY(0);} }
 
+/* GIF 外掛樣式 */
+#overlay img.gif-after { 
+  position: absolute;
+  transform: translateX(-50%);
+  transition: all 1s ease;
+}
 </style>
 </head>
 <body>
@@ -249,7 +255,7 @@ dislikeBtn.onclick=()=>{
 
   }else if(dislikeCount===2){
     for(let i=0;i<30;i++){
-      const e=document.createElement
+      const e=document.createElement("div");
       e.className="emoji-fall";
       e.textContent="🥹";
       e.style.left=(Math.random()*90)+"vw";
@@ -274,20 +280,20 @@ modalClose.onclick=()=>{modal.classList.remove("show");};
 
 // ===== 新動畫 JS =====
 likeBtn.onclick = () => {
-  // 1️⃣ 清掉蛋糕、文字、按鈕
+  // 只清除蛋糕、文字與按鈕
   document.getElementById("cake-area").innerHTML = "";
   afterCake.style.display = "none";
 
-  // 2️⃣ 啟動新的 overlay 動畫
+  // 啟動新的 overlay 動畫
   startOverlaySequence();
 };
 
-// ===== 新動畫函式 =====
+// 新動畫函式
 function startOverlaySequence() {
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
 
-  // 圓形置中淡入
+  // 1️⃣ 圓形置中淡入
   const shape = document.createElement('div');
   shape.className = 'shape';
   shape.style.width = '50px';
@@ -301,7 +307,7 @@ function startOverlaySequence() {
     shape.style.transform = 'translateY(0)';
   });
 
-  // 圓形變成長方形，佔畫面 80%
+  // 2️⃣ 圓形變成長方形，佔畫面 80%
   setTimeout(() => {
     shape.style.transition = 'all 1.5s ease';
     shape.style.width = '80%';
@@ -309,7 +315,7 @@ function startOverlaySequence() {
     shape.style.borderRadius = '12px';
   }, 600);
 
-  // 文字逐行顯示
+  // 3️⃣ 文字逐行顯示
   const texts = ['🎉 謝謝你喜歡 🎉','這是為你準備的驚喜！','🎁 請盡情享受 🎁'];
   setTimeout(() => {
     texts.forEach((line,index)=>{
@@ -319,6 +325,23 @@ function startOverlaySequence() {
       p.textContent = line;
       shape.appendChild(p);
     });
+
+    // 4️⃣ GIF 顯示在長方形下方置中
+    setTimeout(() => {
+      const gif = document.createElement('img');
+      gif.src = 'running_dog.gif'; // 使用英文檔名
+      gif.className = 'gif-after';
+      const rect = shape.getBoundingClientRect();
+      gif.style.top = rect.bottom + 20 + 'px'; // 長方形下方 20px
+      gif.style.left = rect.left + rect.width/2 + 'px'; // 水平置中
+      gif.style.opacity = 0;
+      overlay.appendChild(gif);
+
+      // 淡入動畫
+      requestAnimationFrame(() => {
+        gif.style.opacity = 1;
+      });
+    }, texts.length * 500); // 等文字動畫完成
   }, 1800);
 }
 
