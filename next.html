@@ -219,7 +219,7 @@ body {
 
 <script>
 const COUNT_MESSAGES = [
-  "嘿～謝小芬!!!",
+  "嘿～芝茉妲絲",
   "今天是屬於",
   "🫵🏻🫵🏻🫵🏻你🫵🏻🫵🏻🫵🏻",
   "特別日子！！！",
@@ -353,13 +353,33 @@ dislikeBtn.onclick=()=>{
 modalClose.onclick=()=>{modal.classList.remove("show");};
 
 /* === 我很喜歡 === */
-likeBtn.onclick=()=>{
-  document.getElementById("main-container").innerHTML="";
-  document.getElementById("future-area").style.display="none"; 
-  document.getElementById("revealStage").style.display="flex"; // 顯示舞台
-  startMyNewThing(); // 啟動舞台動畫
+likeBtn.onclick = () => {
+  document.getElementById("main-container").innerHTML = "";
+  const newArea = document.getElementById("future-area");
+  newArea.style.display = "flex";
+  newArea.style.justifyContent = "center";
+  newArea.style.alignItems = "center";
+  newArea.style.minHeight = "100vh";
+
+  newArea.innerHTML = `
+    <div style="
+      background: rgba(255,255,255,0.75);
+      padding: 40px 60px;
+      border-radius: 20px;
+      text-align: center;
+      font-size: 1.6em;
+      font-weight: 700;
+      color: var(--fg);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      max-width: 90%;
+    ">
+      <div>🎉 謝謝你喜歡 🎉</div>
+      <div style="margin-top:16px;">這是為你準備的驚喜！</div>
+      <img src="your.gif" alt="驚喜GIF" style="margin-top:20px;max-width:320px;border-radius:12px;" />
+    </div>
+  `;
 };
-  
+
 /* 啟動 */
 window.onload=()=>{
   try{bgm.play().catch(()=>{});}catch(e){}
