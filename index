@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 分享時的標題與描述 -->
+  <meta property="og:title" content="Welcome">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="https://example.com/cover.png">
+<title>Loading...</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: "Noto Sans TC", sans-serif;
+  text-align: center;
+  background: linear-gradient(to right, #d8b4fe, #fbc2eb);
+}
+
+#welcome-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  color: #4b0082;
+  margin-bottom: 30px;
+}
+
+input {
+  margin: 10px;
+  padding: 12px 15px;
+  width: 250px;
+  font-size: 1em;
+  border: 2px solid #c084fc;
+  border-radius: 10px;
+  outline: none;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 1.2em;
+  background: #a78bfa;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #5a189a;
+}
+
+/* 彈出視窗 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.1em;
+  color: #4b0082;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+}
+
+.modal-content button {
+  margin-top: 15px;
+  background: #a78bfa;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="welcome-screen">
+  <h1>今天是什麼日子呢？</h1>
+
+  <input id="nameInput" type="text" placeholder="匿名是啥不會忘了吧？">
+  <input id="passwordInput" type="password" placeholder="密碼是什麼不用多說吧？">
+
+  <button onclick="checkLogin()">✔ 確認</button>
+
+  <p class="note">Ps: 記得聲音要打開來哦～😗</p>
+</div>
+
+<!-- 彈出錯誤視窗 -->
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <p>欸～都已經提示了</p>
+    <p>你還輸入錯誤傷心了都～～</p>
+    <button onclick="closeModal()">好啦我重試</button>
+  </div>
+</div>
+
+<script>
+function checkLogin() {
+  const name = document.getElementById("nameInput").value.trim();
+  const password = document.getElementById("passwordInput").value.trim();
+
+  if (name === "謝小芬" && password === "0914") {
+    // ✅ 使用者互動後，允許音樂播放
+    localStorage.setItem("bgmAllowed", "true");
+
+    // ✅ 進入下一頁
+    window.location.href = "next.html";
+  } else {
+    // ❌ 顯示錯誤視窗
+    document.getElementById("errorModal").style.display = "flex";
+  }
+}
+
+function closeModal() {
+  document.getElementById("errorModal").style.display = "none";
+}
+</script>
+
+</body>
+</html>
