@@ -273,13 +273,13 @@ dislikeBtn.onclick=()=>{
 modalClose.onclick=()=>{modal.classList.remove("show");};
 
 // ===== 新動畫 JS =====
-// ===== 新動畫 =====
 likeBtn.onclick = () => {
-  // 1️⃣ 清掉蛋糕、文字、按鈕
-  document.getElementById("cake-area").innerHTML = "";
+  // 1️⃣ 隱藏蛋糕、祝賀文字、按鈕
+  cakeVideo.style.display = "none";
+  cakeGif.style.display = "none";
   afterCake.style.display = "none";
 
-  // 2️⃣ 啟動新的 overlay 動畫
+  // 2️⃣ 啟動 overlay 動畫
   startOverlaySequence();
 };
 
@@ -321,25 +321,24 @@ function startOverlaySequence() {
       shape.appendChild(p);
     });
 
-    // 4️⃣ GIF 從右邊淡入移動到長方形下方置中
+    // 4️⃣ GIF 從右邊進來
     setTimeout(() => {
       const gif = document.createElement('img');
       gif.src = '線條小狗奔跑.gif';
       gif.style.width = '320px';
       gif.style.borderRadius = '12px';
       gif.style.position = 'absolute';
-      gif.style.opacity = 0;
-      gif.style.transform = 'translateX(0)';
-      gif.style.transition = 'all 1s ease';
-
-      overlay.appendChild(gif);
 
       // 計算長方形下方位置
       const rect = shape.getBoundingClientRect();
       gif.style.top = rect.bottom + 20 + 'px'; // 長方形下方 20px
       gif.style.left = '100%'; // 初始在右邊畫面外
+      gif.style.opacity = 0;
+      gif.style.transform = 'translateX(0)';
+      gif.style.transition = 'all 1s ease';
+      overlay.appendChild(gif);
 
-      // 淡入 + 移動到置中
+      // 淡入 + 移動到長方形下方置中
       requestAnimationFrame(() => {
         gif.style.opacity = 1;
         gif.style.left = rect.left + rect.width/2 + 'px';
@@ -348,9 +347,6 @@ function startOverlaySequence() {
     }, texts.length * 500);
 
   }, 1800);
-}
-
-  // 文字顯示後長方形不消失 → 停留在畫面上
 }
 
 // 啟動舊流程
