@@ -326,32 +326,27 @@ function startOverlaySequence() {
       shape.appendChild(p);
     });
 
-    // 4️⃣ GIF 從左邊淡入並移動到長方形下方置中
-    setTimeout(() => {
-      const gif = document.createElement('img');
-      gif.src = 'running_dog.gif'; 
-      gif.className = 'gif-after';
-      
-      // 限制尺寸，避免超過螢幕
-      gif.style.maxWidth = '35%';     // 最多佔螢幕寬 35%
-      gif.style.maxHeight = '160px';  // 高度最多 160px
-      gif.style.width = 'auto';
-      gif.style.height = 'auto';
+    // 4️⃣ GIF 顯示在長方形下方，略微壓住下方四分之一
+setTimeout(() => {
+  const gif = document.createElement('img');
+  gif.src = 'running_dog.gif'; // 使用英文檔名
+  gif.className = 'gif-after';
+  gif.style.width = '200px'; // GIF 縮小
+  gif.style.height = 'auto';
+  
+  const rect = shape.getBoundingClientRect();
+  // 置中水平，壓住下方四分之一
+  gif.style.left = rect.left + rect.width / 2 + 'px';
+  gif.style.top = rect.bottom - rect.height * 0.25 + 'px';
+  
+  gif.style.opacity = 0;
+  gif.style.transform = 'translateX(-100px)'; // 從左邊淡入
+  overlay.appendChild(gif);
 
-      // 初始位置：在左側螢幕外
-      gif.style.position = 'absolute';
-      const rect = shape.getBoundingClientRect();
-      gif.style.top = rect.bottom + 15 + 'px';  // 長方形下方 15px
-      gif.style.left = '-200px'; // 從螢幕左邊外開始
-      gif.style.opacity = 0;
-      gif.style.transition = 'all 1s ease';
-      
-      overlay.appendChild(gif);
-
-  // 動畫：淡入 + 移動到置中
+  // 淡入 + 移動到正確位置
   requestAnimationFrame(() => {
+    gif.style.transition = 'all 1s ease';
     gif.style.opacity = 1;
-    gif.style.left = rect.left + rect.width / 2 + 'px';
     gif.style.transform = 'translateX(-50%)';
   });
 }, texts.length * 500);
