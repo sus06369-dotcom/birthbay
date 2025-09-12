@@ -82,7 +82,7 @@ body {
   width:100%; height:100%;
   display:flex;
   justify-content:center;
-  align-items:center; /* 垂直置中 */
+  align-items:center;
   pointer-events:none;
   background: transparent;
   overflow:hidden;
@@ -98,6 +98,7 @@ body {
   transition: all 1.5s ease, opacity 1s ease;
   position: relative;
   opacity: 0;
+  padding: 20px;
 }
 .text-line {
   opacity: 0;
@@ -111,8 +112,9 @@ body {
 /* GIF 外掛樣式 */
 #overlay img.gif-after { 
   position: absolute;
+  max-width: 40%;   /* 調整大小不要超過螢幕 */
+  height: auto;
   transform: translateX(-50%);
-  transition: all 1s ease;
 }
 </style>
 </head>
@@ -280,7 +282,7 @@ modalClose.onclick=()=>{modal.classList.remove("show");};
 
 // ===== 新動畫 JS =====
 likeBtn.onclick = () => {
-  // 只清除蛋糕、文字與按鈕
+  // 只清除蛋糕、祝賀文字與按鈕
   document.getElementById("cake-area").innerHTML = "";
   afterCake.style.display = "none";
 
@@ -311,7 +313,6 @@ function startOverlaySequence() {
   setTimeout(() => {
     shape.style.transition = 'all 1.5s ease';
     shape.style.width = '80%';
-    shape.style.height = '80%';
     shape.style.borderRadius = '12px';
   }, 600);
 
@@ -326,33 +327,18 @@ function startOverlaySequence() {
       shape.appendChild(p);
     });
 
-    // 4️⃣ GIF 顯示在長方形下方，略微壓住下方四分之一
-setTimeout(() => {
-  const gif = document.createElement('img');
-  gif.src = 'running_dog.gif'; // 使用英文檔名
-  gif.className = 'gif-after';
-  gif.style.width = '200px'; // GIF 縮小
-  gif.style.height = 'auto';
-  
-  const rect = shape.getBoundingClientRect();
-  // 置中水平，壓住下方四分之一
-  gif.style.left = rect.left + rect.width / 2 + 'px';
-  gif.style.top = rect.bottom - rect.height * 0.25 + 'px';
-  
-  gif.style.opacity = 0;
-  gif.style.transform = 'translateX(-100px)'; // 從左邊淡入
-  overlay.appendChild(gif);
-
-  // 淡入 + 移動到正確位置
-  requestAnimationFrame(() => {
-    gif.style.transition = 'all 1s ease';
-    gif.style.opacity = 1;
-    gif.style.transform = 'translateX(-50%)';
-  });
-}, texts.length * 500);
-
-    // 等文字動畫完成
-  }, 1800);
+    // 4️⃣ GIF 顯示在文字下方
+    setTimeout(() => {
+      const gif = document.createElement('img');
+      gif.src = 'running_dog2.gif'; // 替換成你的 GIF 名稱
+      gif.className = 'gif-after';
+      const rect = shape.getBoundingClientRect();
+      gif.style.top = rect.bottom - rect.top + 20 + 'px'; // 文字下方位置
+      gif.style.left = '50%'; // 水平置中
+      gif.style.opacity = 1;
+      overlay.appendChild(gif);
+    }, texts.length * 500);
+  }, 600); // 等圓形變長方形完成
 }
 
 // 啟動舊流程
