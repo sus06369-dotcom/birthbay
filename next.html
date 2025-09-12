@@ -280,7 +280,9 @@ likeBtn.onclick = () => {
 
   // 2️⃣ 啟動新的 overlay 動畫
   startOverlaySequence();
+};
 
+// ===== 新動畫函式 =====
 function startOverlaySequence() {
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
@@ -307,9 +309,9 @@ function startOverlaySequence() {
     shape.style.borderRadius = '12px';
   }, 600);
 
-  // 3️⃣ 文字逐行顯示後加入 GIF
+  // 3️⃣ 文字逐行顯示
+  const texts = ['🎉 謝謝你喜歡 🎉','這是為你準備的驚喜！','🎁 請盡情享受 🎁'];
   setTimeout(() => {
-    const texts = ['🎉 謝謝你喜歡 🎉','這是為你準備的驚喜！','🎁 請盡情享受 🎁'];
     texts.forEach((line,index)=>{
       const p = document.createElement('p');
       p.className = 'text-line';
@@ -318,32 +320,32 @@ function startOverlaySequence() {
       shape.appendChild(p);
     });
 
-  // GIF 從右邊進來
-  setTimeout(() => {
-    const overlay = document.getElementById('overlay');
-    const gif = document.createElement('img');
-    gif.src = '線條小狗奔跑.gif';
-    gif.style.width = '320px';
-    gif.style.borderRadius = '12px';
-    gif.style.position = 'absolute';
+    // 4️⃣ GIF 從右邊進來
+    setTimeout(() => {
+      const gif = document.createElement('img');
+      gif.src = '線條小狗奔跑.gif';
+      gif.style.width = '320px';
+      gif.style.borderRadius = '12px';
+      gif.style.position = 'absolute';
 
-    // 計算長方形下方位置
-    const rect = shape.getBoundingClientRect();
-    gif.style.top = rect.bottom + 20 + 'px'; // 長方形下方 20px
-    gif.style.left = '100%'; // 初始在右邊畫面外
-    gif.style.opacity = 0;
-    gif.style.transform = 'translateX(0)';
-    gif.style.transition = 'all 1s ease';
-    overlay.appendChild(gif);
+      // 計算長方形下方位置
+      const rect = shape.getBoundingClientRect();
+      gif.style.top = rect.bottom + 20 + 'px'; // 長方形下方 20px
+      gif.style.left = '100%'; // 初始在右邊畫面外
+      gif.style.opacity = 0;
+      gif.style.transform = 'translateX(0)';
+      gif.style.transition = 'all 1s ease';
+      overlay.appendChild(gif);
 
-    // 淡入 + 移動到長方形下方置中
-    requestAnimationFrame(() => {
-      gif.style.opacity = 1;
-      gif.style.left = rect.left + rect.width/2 + 'px';
-      gif.style.transform = 'translateX(-50%)';
-    });
-  }, texts.length * 500); // 文字動畫完成後觸發
-}, 1800);
+      // 淡入 + 移動到長方形下方置中
+      requestAnimationFrame(() => {
+        gif.style.opacity = 1;
+        gif.style.left = rect.left + rect.width/2 + 'px';
+        gif.style.transform = 'translateX(-50%)';
+      });
+    }, texts.length * 500);
+
+  }, 1800);
 
   // 文字顯示後長方形不消失 → 停留在畫面上
 }
