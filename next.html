@@ -25,7 +25,7 @@ body {
   color:var(--fg);
 }
 
-/* 全螢幕文字 */
+/* 全螢幕置中文字 */
 .slide { position:fixed; inset:0; display:flex; justify-content:center; align-items:center; background: transparent; z-index:3; }
 .msg { font-weight:700; white-space:nowrap; opacity:0; transform: scale(.5); transition: all .6s ease; }
 .msg.show { opacity:1; transform: scale(1); }
@@ -77,13 +77,12 @@ body {
 
 /* ===== 新動畫 CSS ===== */
 #overlay {
-  display: none; /* 初始隱藏 */
   position: fixed;
   top:0; left:0;
   width:100%; height:100%;
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:center; /* 垂直置中 */
   pointer-events:none;
   background: transparent;
   overflow:hidden;
@@ -92,17 +91,14 @@ body {
 .shape {
   background: rgba(255,255,255,0.8);
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: all 1.2s ease, opacity 1s ease;
+  transition: all 1.5s ease, opacity 1s ease;
   position: relative;
   opacity: 0;
 }
-
 .text-line {
   opacity: 0;
   color: #000;
@@ -110,10 +106,8 @@ body {
   margin: 10px 0;
   animation: fadeSlideIn 0.5s forwards;
 }
+@keyframes fadeSlideIn { to { opacity: 1; transform: translateY(0);} }
 
-@keyframes fadeSlideIn { 
-  to { opacity: 1; transform: translateY(0);} 
-}
 </style>
 </head>
 <body>
@@ -144,7 +138,7 @@ body {
 <div id="overlay"></div> <!-- 新動畫 overlay -->
 
 <script>
-// === 舊程式碼完整貼上開始 ===
+// === 舊程式碼 ===
 const COUNT_MESSAGES = [
   "嘿～芝茉妲絲",
   "今天是屬於",
@@ -174,7 +168,7 @@ const bgm=document.getElementById("bgm");
 
 let dislikeCount=0;
 
-/* === 流程：一段文字一段顯示 === */
+// 流程：一段文字一段顯示
 function startSequence(){
   let idx=0;
   function showOne(){
@@ -199,7 +193,7 @@ function startSequence(){
   showOne();
 }
 
-/* === 蛋糕流程 === */
+// 蛋糕流程
 function showCake(){
   cakeVideo.src=VIDEO_SRC;
   cakeGif.src=GIF_SRC;
@@ -225,7 +219,7 @@ function showCelebrate(){
   },1000);
 }
 
-/* === 彩屑 === */
+// 彩屑
 function launchConfetti(){
   setInterval(()=>{
     const confetti=document.createElement("div");
@@ -243,7 +237,7 @@ function launchConfetti(){
   },120);
 }
 
-/* === 不喜歡互動 === */
+// 不喜歡互動
 dislikeBtn.onclick=()=>{
   dislikeCount++;
   likeBtn.style.transform=`scale(${1+dislikeCount*0.2})`;
@@ -278,66 +272,57 @@ dislikeBtn.onclick=()=>{
 };
 modalClose.onclick=()=>{modal.classList.remove("show");};
 
-// === 舊程式碼完整貼上結束 ===
-
 // ===== 新動畫 JS =====
 likeBtn.onclick = () => {
+  // 1️⃣ 清掉蛋糕、文字、按鈕
+  document.getElementById("cake-area").innerHTML = "";
+  afterCake.style.display = "none";
+
+  // 2️⃣ 啟動新的 overlay 動畫
   startOverlaySequence();
 };
 
 function startOverlaySequence() {
-  // 隱藏舊畫面
-  const mainContainer = document.getElementById('main-container');
-  mainContainer.style.display = 'none';
-
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
-  overlay.style.display = 'flex';
-  overlay.style.justifyContent = 'center';
-  overlay.style.alignItems = 'flex-start'; // 從上方跳下
-  overlay.style.paddingTop = '50px'; // 讓圓形一開始偏上
 
-  // 1️⃣ 圓形淡入從上方跳下
+  // 1️⃣ 圓形置中淡入
   const shape = document.createElement('div');
   shape.className = 'shape';
-  shape.style.opacity = 0;
-  shape.style.transform = 'translateY(-100px) scale(0.5)';
+  shape.style.width = '50px';
+  shape.style.height = '50px';
   overlay.appendChild(shape);
 
+  // 從上方跳下來
+  shape.style.transform = 'translateY(-50px)';
   requestAnimationFrame(() => {
-    shape.style.transition = 'all 0.8s ease';
     shape.style.opacity = 1;
-    shape.style.transform = 'translateY(0) scale(1)';
+    shape.style.transform = 'translateY(0)';
   });
 
-  // 2️⃣ 圓形慢慢變長方形 (70%寬高)
+  // 2️⃣ 圓形變成長方形，佔畫面 70%
   setTimeout(() => {
     shape.style.transition = 'all 1.5s ease';
     shape.style.width = '70%';
     shape.style.height = '70%';
-    shape.style.borderRadius = '20px';
-  }, 1000);
+    shape.style.borderRadius = '12px';
+  }, 600);
 
   // 3️⃣ 文字逐行顯示
   setTimeout(() => {
-    const texts = ['🎉 謝謝你喜歡 🎉', '這是為你準備的驚喜！', '🎁 請盡情享受 🎁'];
-    texts.forEach((line, index) => {
+    const texts = ['🎉 謝謝你喜歡 🎉','這是為你準備的驚喜！','🎁 請盡情享受 🎁'];
+    texts.forEach((line,index)=>{
       const p = document.createElement('p');
       p.className = 'text-line';
-      p.style.animationDelay = `${index * 0.5}s`;
+      p.style.animationDelay = `${index*0.5}s`;
       p.textContent = line;
       shape.appendChild(p);
     });
-  }, 2600); // 1000 + 1500 過渡完成
+  }, 1800);
 
-  // 4️⃣ 文字顯示完後可以淡出 overlay（可選）
-  const totalTextTime = 2600 + (3 * 500);
-  setTimeout(() => {
-    shape.style.transition = 'opacity 1s ease';
-    shape.style.opacity = 0;
-    setTimeout(() => overlay.innerHTML = '', 1000);
-  }, totalTextTime + 500);
+  // 文字顯示後長方形不消失 → 停留在畫面上
 }
+
 // 啟動舊流程
 window.onload=()=>{
   try{bgm.play().catch(()=>{});}catch(e){}
