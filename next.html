@@ -188,6 +188,46 @@ body {
 
 /* 保留區塊 */
 #future-area { display:none; }
+/* ===== 新動畫 CSS ===== */
+#overlay {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  pointer-events:none;
+  background: transparent;
+  overflow:hidden;
+  z-index:20;
+}
+.shape {
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 1.2s ease, opacity 1s ease;
+  position: relative;
+  opacity: 0;
+}
+.shape.expanded {
+  width: 100%;
+  height: 100%;
+  border-radius: 0%;
+  opacity: 1;
+}
+.text-line {
+  opacity: 0;
+  color: #000;
+  font-size: 24px;
+  margin: 10px 0;
+  animation: fadeSlideIn 0.5s forwards;
+}
+@keyframes fadeSlideIn { to { opacity: 1; transform: translateY(0);} }
 </style>
 </head>
 <body>
@@ -353,32 +393,43 @@ dislikeBtn.onclick=()=>{
 modalClose.onclick=()=>{modal.classList.remove("show");};
 
 /* === 我很喜歡 === */
-likeBtn.onclick = () => {
-  document.getElementById("main-container").innerHTML = "";
-  const newArea = document.getElementById("future-area");
-  newArea.style.display = "flex";
-  newArea.style.justifyContent = "center";
-  newArea.style.alignItems = "center";
-  newArea.style.minHeight = "100vh";
-
-  newArea.innerHTML = `
-    <div style="
-      background: rgba(255,255,255,0.75);
-      padding: 40px 60px;
-      border-radius: 20px;
-      text-align: center;
-      font-size: 1.6em;
-      font-weight: 700;
-      color: var(--fg);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      max-width: 90%;
-    ">
-      <div>🎉 謝謝你喜歡 🎉</div>
-      <div style="margin-top:16px;">這是為你準備的驚喜！</div>
-      <img src="your.gif" alt="驚喜GIF" style="margin-top:20px;max-width:320px;border-radius:12px;" />
-    </div>
-  `;
+likeBtn.onclick = () => {startOverlaySequence();
 };
+
+// ===== 新動畫 JS =====
+function startOverlaySequence() {
+  const overlay = document.getElementById('overlay');
+  overlay.innerHTML = '';
+
+  // 1️⃣ 圓形淡入
+  const shape = document.createElement('div');
+  shape.className = 'shape';
+  overlay.appendChild(shape);
+
+  requestAnimationFrame(() => { shape.style.opacity = 1; });
+
+  // 2️⃣ 圓形變長方形填滿
+  setTimeout(() => { shape.classList.add('expanded'); }, 600);
+
+  // 3️⃣ 文字逐行顯示
+  setTimeout(() => {
+    const texts = ['第一行文字', '第二行文字', '第三行文字'];
+    texts.forEach((line,index)=>{
+      const p=document.createElement('p');
+      p.className='text-line';
+      p.style.animationDelay=`${index*0.5}s`;
+      p.textContent=line;
+      shape.appendChild(p);
+    });
+  }, 1800);
+
+  // 4️⃣ 文字顯示完 → 整個背景淡出
+  const totalTextTime = 1800 + (3*500);
+  setTimeout(() => {
+    shape.style.opacity = 0;
+    setTimeout(()=>{ overlay.innerHTML = ''; }, 1000);
+  }, totalTextTime+500);
+}
 
 /* 啟動 */
 window.onload=()=>{
