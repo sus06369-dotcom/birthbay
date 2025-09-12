@@ -25,7 +25,7 @@ body {
   color:var(--fg);
 }
 
-/* 全螢幕置中文字 */
+/* 全螢幕文字 */
 .slide { position:fixed; inset:0; display:flex; justify-content:center; align-items:center; background: transparent; z-index:3; }
 .msg { font-weight:700; white-space:nowrap; opacity:0; transform: scale(.5); transition: all .6s ease; }
 .msg.show { opacity:1; transform: scale(1); }
@@ -77,6 +77,7 @@ body {
 
 /* ===== 新動畫 CSS ===== */
 #overlay {
+  display: none; /* 初始隱藏 */
   position: fixed;
   top:0; left:0;
   width:100%; height:100%;
@@ -115,7 +116,6 @@ body {
   animation: fadeSlideIn 0.5s forwards;
 }
 @keyframes fadeSlideIn { to { opacity: 1; transform: translateY(0);} }
-
 </style>
 </head>
 <body>
@@ -146,26 +146,156 @@ body {
 <div id="overlay"></div> <!-- 新動畫 overlay -->
 
 <script>
-// === 舊程式碼 ===
-// 這裡放你原本的 COUNT_MESSAGES、showCake、showCelebrate、彩屑、emoji、modal 等 JS
-// 保持不動
-// 省略重複貼上，實際上就是你提供的完整 JS
+// === 舊程式碼完整貼上開始 ===
+const COUNT_MESSAGES = [
+  "嘿～芝茉妲絲",
+  "今天是屬於",
+  "🫵🏻🫵🏻🫵🏻你🫵🏻🫵🏻🫵🏻",
+  "特別日子！！！",
+  "準備好了嗎？🧐",
+  "就算還沒👀",
+  "也給我準備好😎",
+  "時間不等人的🥳",
+  "3","2","1"
+];
+const VIDEO_SRC="Cake1.webm";
+const GIF_SRC="Cake2.gif";
 
-// 只改 likeBtn.onclick
+const cakeVideo=document.getElementById("cakeVideo");
+const cakeGif=document.getElementById("cakeGif");
+const afterCake=document.getElementById("afterCake");
+const celebrateText=document.getElementById("celebrateText");
+const buttons=document.getElementById("buttons");
+const likeBtn=document.getElementById("likeBtn");
+const dislikeBtn=document.getElementById("dislikeBtn");
+const emojiOverlay=document.getElementById("emojiOverlay");
+const modal=document.getElementById("modal");
+const modalText=document.getElementById("modalText");
+const modalClose=document.getElementById("modalClose");
+const bgm=document.getElementById("bgm");
+
+let dislikeCount=0;
+
+/* === 流程：一段文字一段顯示 === */
+function startSequence(){
+  let idx=0;
+  function showOne(){
+    if(idx>=COUNT_MESSAGES.length){ showCake(); return; }
+    const slide=document.createElement("div");
+    slide.className="slide";
+    const msg=document.createElement("div");
+    const isNum=!isNaN(COUNT_MESSAGES[idx]);
+    msg.className="msg "+(isNum?"count":"normal");
+    msg.textContent=COUNT_MESSAGES[idx];
+    slide.appendChild(msg);
+    document.body.appendChild(slide);
+
+    setTimeout(()=>msg.classList.add("show"),50);
+    const dur=isNum?1800:1500;
+    setTimeout(()=>{
+      msg.classList.remove("show");
+      msg.classList.add("hide");
+      setTimeout(()=>{slide.remove(); idx++; showOne();},500);
+    },dur);
+  }
+  showOne();
+}
+
+/* === 蛋糕流程 === */
+function showCake(){
+  cakeVideo.src=VIDEO_SRC;
+  cakeGif.src=GIF_SRC;
+  cakeVideo.classList.add("show");
+  cakeVideo.play().catch(()=>{console.log("autoplay blocked");});
+
+  cakeVideo.onended=()=>{
+    cakeVideo.classList.remove("show");
+    setTimeout(()=>{
+      cakeVideo.style.display="none";
+      cakeGif.classList.add("show");
+      showCelebrate();
+    },400);
+  };
+}
+function showCelebrate(){
+  afterCake.style.display="block";
+  setTimeout(()=>celebrateText.classList.add("show"),200);
+  setTimeout(()=>{
+    buttons.style.opacity=1;
+    likeBtn.classList.add("left-in");
+    dislikeBtn.classList.add("right-in");
+  },1000);
+}
+
+/* === 彩屑 === */
+function launchConfetti(){
+  setInterval(()=>{
+    const confetti=document.createElement("div");
+    confetti.className="confetti";
+    document.body.appendChild(confetti);
+
+    const size=Math.random()*12+8;
+    confetti.style.width=`${size}px`;
+    confetti.style.height=`${size}px`;
+    confetti.style.left=`${Math.random()*100}vw`;
+    confetti.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`;
+    confetti.style.animationDuration=`${Math.random()*3+2}s`;
+
+    setTimeout(()=>confetti.remove(),5000);
+  },120);
+}
+
+/* === 不喜歡互動 === */
+dislikeBtn.onclick=()=>{
+  dislikeCount++;
+  likeBtn.style.transform=`scale(${1+dislikeCount*0.2})`;
+
+  if(dislikeCount===1){
+    emojiOverlay.textContent="🥺";
+    emojiOverlay.classList.add("show");
+    setTimeout(()=>emojiOverlay.classList.remove("show"),1500);
+
+  }else if(dislikeCount===2){
+    for(let i=0;i<30;i++){
+      const e=document.createElement("div");
+      e.className="emoji-fall";
+      e.textContent="🥹";
+      e.style.left=(Math.random()*90)+"vw";
+      e.style.animationDuration=(2+Math.random()*3)+"s";
+      e.style.fontSize=(24+Math.random()*14)+"px";
+      document.body.appendChild(e);
+      setTimeout(()=>e.remove(),5000);
+    }
+
+  }else if(dislikeCount>=3){
+    let text="";
+    if(dislikeCount===3) text="你忍心嗎？🥺";
+    else if(dislikeCount===4) text="不要開玩笑啦…🥺";
+    else if(dislikeCount===5) text="你再點我都快碎掉了🥹";
+    else if(dislikeCount===6) text="好了，已經傷心了都\n沒有其他話了🥹\n不要再給我點不喜歡了";
+    else text="沒了啦！還點！";
+    modalText.innerText=text;
+    modal.classList.add("show");
+  }
+};
+modalClose.onclick=()=>{modal.classList.remove("show");};
+
+// === 舊程式碼完整貼上結束 ===
+
+// ===== 新動畫 JS =====
 likeBtn.onclick = () => {
   startOverlaySequence();
 };
 
-// ===== 新動畫 JS =====
 function startOverlaySequence() {
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
+  overlay.style.display = 'flex';
 
   // 1️⃣ 圓形淡入
   const shape = document.createElement('div');
   shape.className = 'shape';
   overlay.appendChild(shape);
-
   requestAnimationFrame(() => { shape.style.opacity = 1; });
 
   // 2️⃣ 圓形變長方形填滿
