@@ -102,12 +102,7 @@ body {
   position: relative;
   opacity: 0;
 }
-.shape.expanded {
-  width: 100%;
-  height: 100%;
-  border-radius: 0%;
-  opacity: 1;
-}
+
 .text-line {
   opacity: 0;
   color: #000;
@@ -115,7 +110,10 @@ body {
   margin: 10px 0;
   animation: fadeSlideIn 0.5s forwards;
 }
-@keyframes fadeSlideIn { to { opacity: 1; transform: translateY(0);} }
+
+@keyframes fadeSlideIn { 
+  to { opacity: 1; transform: translateY(0);} 
+}
 </style>
 </head>
 <body>
@@ -288,40 +286,58 @@ likeBtn.onclick = () => {
 };
 
 function startOverlaySequence() {
+  // 隱藏舊畫面
+  const mainContainer = document.getElementById('main-container');
+  mainContainer.style.display = 'none';
+
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
   overlay.style.display = 'flex';
+  overlay.style.justifyContent = 'center';
+  overlay.style.alignItems = 'flex-start'; // 從上方跳下
+  overlay.style.paddingTop = '50px'; // 讓圓形一開始偏上
 
-  // 1️⃣ 圓形淡入
+  // 1️⃣ 圓形淡入從上方跳下
   const shape = document.createElement('div');
   shape.className = 'shape';
+  shape.style.opacity = 0;
+  shape.style.transform = 'translateY(-100px) scale(0.5)';
   overlay.appendChild(shape);
-  requestAnimationFrame(() => { shape.style.opacity = 1; });
 
-  // 2️⃣ 圓形變長方形填滿
-  setTimeout(() => { shape.classList.add('expanded'); }, 600);
+  requestAnimationFrame(() => {
+    shape.style.transition = 'all 0.8s ease';
+    shape.style.opacity = 1;
+    shape.style.transform = 'translateY(0) scale(1)';
+  });
+
+  // 2️⃣ 圓形慢慢變長方形 (70%寬高)
+  setTimeout(() => {
+    shape.style.transition = 'all 1.5s ease';
+    shape.style.width = '70%';
+    shape.style.height = '70%';
+    shape.style.borderRadius = '20px';
+  }, 1000);
 
   // 3️⃣ 文字逐行顯示
   setTimeout(() => {
-    const texts = ['🎉 謝謝你喜歡 🎉','這是為你準備的驚喜！','🎁 請盡情享受 🎁'];
-    texts.forEach((line,index)=>{
+    const texts = ['🎉 謝謝你喜歡 🎉', '這是為你準備的驚喜！', '🎁 請盡情享受 🎁'];
+    texts.forEach((line, index) => {
       const p = document.createElement('p');
       p.className = 'text-line';
-      p.style.animationDelay = `${index*0.5}s`;
+      p.style.animationDelay = `${index * 0.5}s`;
       p.textContent = line;
       shape.appendChild(p);
     });
-  }, 1800);
+  }, 2600); // 1000 + 1500 過渡完成
 
-  // 4️⃣ 文字顯示完 → 整個背景淡出
-  const totalTextTime = 1800 + (3*500);
+  // 4️⃣ 文字顯示完後可以淡出 overlay（可選）
+  const totalTextTime = 2600 + (3 * 500);
   setTimeout(() => {
     shape.style.transition = 'opacity 1s ease';
     shape.style.opacity = 0;
-    setTimeout(()=>overlay.innerHTML='',1000);
+    setTimeout(() => overlay.innerHTML = '', 1000);
   }, totalTextTime + 500);
 }
-
 // 啟動舊流程
 window.onload=()=>{
   try{bgm.play().catch(()=>{});}catch(e){}
