@@ -355,14 +355,11 @@ modalClose.onclick=()=>{modal.classList.remove("show");};
 /* === 我很喜歡 === */
 likeBtn.onclick=()=>{
   document.getElementById("main-container").innerHTML="";
-  const newArea=document.getElementById("future-area");
-  newArea.style.display="flex";
-  newArea.style.justifyContent="center";
-  newArea.style.alignItems="center";
-  newArea.style.minHeight="100vh";
-  newArea.innerHTML="<div style='font-weight:700;color:var(--fg);'>（這裡是後續互動區塊）</div>";
+  document.getElementById("future-area").style.display="none"; 
+  document.getElementById("revealStage").style.display="flex"; // 顯示舞台
+  startMyNewThing(); // 啟動舞台動畫
 };
-
+  
 /* 啟動 */
 window.onload=()=>{
   try{bgm.play().catch(()=>{});}catch(e){}
