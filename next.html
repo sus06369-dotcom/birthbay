@@ -285,6 +285,7 @@ likeBtn.onclick = () => {
 function startOverlaySequence() {
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
+  overlay.style.alignItems = 'flex-start';
 
   // 1️⃣ 圓形置中淡入
   const shape = document.createElement('div');
