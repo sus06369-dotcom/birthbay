@@ -290,7 +290,6 @@ likeBtn.onclick = () => {
   startOverlaySequence();
 };
 
-// 新動畫函式
 function startOverlaySequence() {
   const overlay = document.getElementById('overlay');
   overlay.innerHTML = '';
@@ -302,27 +301,28 @@ function startOverlaySequence() {
   shape.style.height = '50px';
   overlay.appendChild(shape);
 
-  // 從上方跳下來
+  // 從上方落下
   shape.style.transform = 'translateY(-50px)';
   requestAnimationFrame(() => {
     shape.style.opacity = 1;
     shape.style.transform = 'translateY(0)';
   });
 
-  // 2️⃣ 圓形變成長方形，佔畫面 80%
+  // 2️⃣ 圓形變成長方形
   setTimeout(() => {
     shape.style.transition = 'all 1.5s ease';
     shape.style.width = '80%';
+    shape.style.height = '60%';
     shape.style.borderRadius = '12px';
   }, 600);
 
   // 3️⃣ 文字逐行顯示
-  const texts = ['🎉 謝謝你喜歡 🎉','這是為你準備的驚喜！','🎁 請盡情享受 🎁'];
+  const texts = ['🎉 謝謝你喜歡 🎉', '這是為你準備的驚喜！', '🎁 請盡情享受 🎁'];
   setTimeout(() => {
-    texts.forEach((line,index)=>{
+    texts.forEach((line, index) => {
       const p = document.createElement('p');
       p.className = 'text-line';
-      p.style.animationDelay = `${index*0.5}s`;
+      p.style.animationDelay = `${index * 0.5}s`;
       p.textContent = line;
       shape.appendChild(p);
     });
@@ -330,15 +330,23 @@ function startOverlaySequence() {
     // 4️⃣ GIF 顯示在文字下方
     setTimeout(() => {
       const gif = document.createElement('img');
-      gif.src = 'running_dog2.gif'; // 替換成你的 GIF 名稱
+      gif.src = 'running_dog.gif'; // 請改成你的 GIF 名稱
       gif.className = 'gif-after';
+      gif.style.opacity = 0;
+
+      // 計算 GIF 位置
       const rect = shape.getBoundingClientRect();
-      gif.style.top = rect.bottom - rect.top + 20 + 'px'; // 文字下方位置
+      gif.style.top = rect.bottom + 20 + 'px'; // 長方形下方 20px
       gif.style.left = '50%'; // 水平置中
-      gif.style.opacity = 1;
+
       overlay.appendChild(gif);
-    }, texts.length * 500);
-  }, 600); // 等圓形變長方形完成
+
+      // 淡入動畫
+      requestAnimationFrame(() => {
+        gif.style.opacity = 1;
+      });
+    }, texts.length * 500); // 等文字動畫完成
+  }, 1800); // 等圓形變長方形完成
 }
 
 // 啟動舊流程
