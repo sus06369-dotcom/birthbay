@@ -128,7 +128,7 @@ body {
     <img id="cakeGif" class="cake-media" alt="cake gif" />
   </div>
   <div id="afterCake">
-    <div id="celebrateText" class="celebrate">お誕生日おめでとう</div>
+    <div id="celebrateText" class="celebrate">~~~ Happy Birthday ~~~</div>
     <div id="buttons">
       <button id="likeBtn" class="btn like">我很喜歡</button>
       <button id="dislikeBtn" class="btn dislike">我不喜歡</button>
@@ -339,7 +339,7 @@ function startOverlaySequence() {
 
       // 計算 GIF 位置
       const rect = shape.getBoundingClientRect();
-      gif.style.top = rect.bottom -50 + 'px'; // 長方形下方 50px
+      gif.style.top = rect.bottom -65 + 'px'; // 長方形下方 50px
       gif.style.left = '50%'; // 水平置中
 
       overlay.appendChild(gif);
