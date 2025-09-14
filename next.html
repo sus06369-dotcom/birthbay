@@ -87,6 +87,8 @@ body {
   background: transparent;
   overflow:hidden;
   z-index:20;
+  overflow: auto;
+  text-align: center;
 }
 .shape {
   background: rgba(255,255,255,0.8);
@@ -102,9 +104,10 @@ body {
 }
 .text-line {
   opacity: 0;
-  color: #000;
+  color: var(--fg);
   font-size: 24px;
-  margin: 10px 0;
+  margin: 4px 0;
+  white-space: nowrap;
   animation: fadeSlideIn 0.5s forwards;
 }
 @keyframes fadeSlideIn { to { opacity: 1; transform: translateY(0);} }
@@ -336,7 +339,7 @@ function startOverlaySequence() {
 
       // 計算 GIF 位置
       const rect = shape.getBoundingClientRect();
-      gif.style.top = rect.bottom + 20 + 'px'; // 長方形下方 10px
+      gif.style.top = rect.bottom + -20 + 'px'; // 長方形下方 10px
       gif.style.left = '50%'; // 水平置中
 
       overlay.appendChild(gif);
